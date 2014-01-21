@@ -70,26 +70,27 @@ def are_amicable(a,b):
 
 def find_amicables(_from,_to):
     amicables = []
-    for a in xrange(2, 10000):
-        for b in xrange(_from, _to):
-            if a != b and a not in amicables and b not in amicables and are_amicable(a,b):
-                print "(%d, %d)" % (a, b)
-                amicables += [a,b]
+    for a in xrange(_from, _to):
+        b = sum(divisors(a)[1:])
+        if a != b and a not in amicables and b not in amicables and sum(divisors(b)[1:]) == a:
+#            print "(%d, %d)" % (a, b)
+            amicables += [a,b]
     return amicables
 
-def amicable_runner(args):
-    return find_amicables(*args)
+print "Sum:", sum(find_amicables(0,10000))
+# def amicable_runner(args):
+#     return find_amicables(*args)
 
-from multiprocessing import Pool
-if __name__ == '__main__':
-    # split work:
-    NB_THREADS = 8
-    args = []
-    slice_size = 10000/NB_THREADS
-    for n in xrange(0,NB_THREADS):
-        args.append((n*slice_size, (n+1)*slice_size-1))
+# from multiprocessing import Pool
+# if __name__ == '__main__':
+#     # split work:
+#     NB_THREADS = 8
+#     args = []
+#     slice_size = 10000/NB_THREADS
+#     for n in xrange(0,NB_THREADS):
+#         args.append((n*slice_size, (n+1)*slice_size-1))
 
-    p = Pool(NB_THREADS)
-    res = p.map(amicable_runner, args)
-    print res
-    print "Sum:", sum(list(set([item for sublist in res for item in sublist])))
+#     p = Pool(NB_THREADS)
+#     res = p.map(amicable_runner, args)
+#     print res
+#     print "Sum:", sum(list(set([item for sublist in res for item in sublist])))
