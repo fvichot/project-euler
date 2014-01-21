@@ -1,19 +1,16 @@
 #!/usr/bin/python
-
-max_len = 0
-num = 0
+max_len, num = (0, 0)
+_cache = {}
 for n in xrange(1,1000000):
-	chain_len = 0
-	c = n
+	chain_len, c = (0, n)
 	while c != 1:
-		if c % 2 == 0:
-			c = c / 2
+		if c in _cache:
+			chain_len += _cache[c]
+			break
 		else:
-			c = 3 * c + 1
-		chain_len = chain_len + 1
-#	print n, chain_len
+			c = (c / 2) if (c % 2) == 0 else (3 * c + 1)
+			chain_len += 1
 	if chain_len > max_len:
-		max_len = chain_len
-		num = n
-
+		max_len, num = (chain_len, n)
+	_cache[n] = chain_len
 print "Num:", num, "Length:", max_len
