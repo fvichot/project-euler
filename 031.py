@@ -48,6 +48,7 @@ if __name__ == '__main__':
 	counts = [0]*len(coin_values)
 	limits = map(lambda x: target // x, coin_values)
 	i = 0
+	total = 0
 	while i < len(coin_values):
 		total = sum(map(mul, coin_values, counts))
 		if total == target:
