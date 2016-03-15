@@ -1,21 +1,34 @@
 #!/usr/bin/python
 
+import math
+import collections
+from sets import Set
 
 _primes_cache = [2,3]
-def _find_primes_cache(nb):
+_primes_set = Set(_primes_cache)
+
+def _is_prime_from_cache(n):
+    is_prime = True
+    for i in _primes_cache:
+        if i*i > n:
+            break
+        if n % i == 0:
+            is_prime = False
+            break
+    return is_prime
+
+def _fill_primes_cache(target):
+    global _primes_cache
     n = _primes_cache[-1]
-    while len(_primes_cache) < nb:
+    while n*n < target:
         n += 2
-        is_prime = True
-        for i in _primes_cache:
-            if n % i == 0:
-                is_prime = False
-                break
-        if is_prime:
+        if _is_prime_from_cache(n):
             _primes_cache.append(n)
+            _primes_set.add(n)
 
 
 def prime_factors(n):
+    global _primes_cache
     i = 0
     factors = []
     p = _primes_cache[0]
@@ -26,14 +39,20 @@ def prime_factors(n):
         else:
             i += 1
             if i == len(_primes_cache):
-                _find_primes_cache(len(_primes_cache) + 500)
+                _fill_primes_cache(n)
             p = _primes_cache[i]
     return factors
 
+
 def is_prime(n):
-    while n > _primes_cache[-1]:
-        _find_primes_cache(len(_primes_cache) + 50)
-    return (n in _primes_dict)
+    global _primes_cache,_primes_set
+    if n == 1:
+        return False
+    if n in _primes_set:
+        return True
+    _fill_primes_cache(n)
+    return _is_prime_from_cache(n)
+
 
 _divisors_cache = {0:[], 1:[1]}
 def divisors(n):
@@ -71,6 +90,7 @@ def divisors(n):
 
     _divisors_cache[n] = divs
     return divs
+
 
 def gcd(a,b):
 	divs_a = divisors(a)
